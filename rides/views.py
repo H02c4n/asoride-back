@@ -1,4 +1,6 @@
 from django.db.models import Q
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.contrib.gis.db.models.functions import Distance
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
@@ -90,6 +92,9 @@ class RideViewSet(viewsets.ModelViewSet):
         ride.status = Ride.Status.ACCEPTED
         ride.save()
 
+        # WebSocket'e bildir
+        self._notify_ride_status(ride, Ride.Status.ACCEPTED)
+
         return Response({"detail": "Yolculuk kabul edildi.", "status": ride.status})
 
     @action(detail=True, methods=['patch'], permission_classes=[permissions.IsAuthenticated])
@@ -119,4 +124,21 @@ class RideViewSet(viewsets.ModelViewSet):
 
         ride.status = new_status
         ride.save()
+        
+        # WebSocket'e bildir
+        self._notify_ride_status(ride, new_status)
+
         return Response({"detail": "Durum güncellendi.", "status": ride.status})
+
+    # ------------------------------------------------------------------
+    # WebSocket Yayın Yardımcısı
+    # ------------------------------------------------------------------
+    def _notify_ride_status(self, ride, new_status):
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f'ride_{ride.id}',
+            {
+                'type': 'ride_status_broadcast',
+                'status': new_status,
+            }
+        )

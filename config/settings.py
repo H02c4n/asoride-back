@@ -79,13 +79,15 @@ DATABASES = {
 
 # Channel Layers için (şu an local için basit tutalım)
 REDIS_HOST = config('REDIS_HOST', default='127.0.0.1')
-
+REDIS_PORT = config('REDIS_PORT', default='6379', cast=int)
 
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [(REDIS_HOST, 6379)],
+            'hosts': [(REDIS_HOST, REDIS_PORT)],
+            'capacity': 1000,
+            'expiry': 10,
         },
     },
 }
