@@ -1,25 +1,22 @@
-
 import os
-
 from django.core.asgi import get_asgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
-
 django_asgi_app = get_asgi_application()
 
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.security.websocket import AllowedHostsOriginValidator
+# Adım 7'de aktif edilecek:
+# from channels.routing import ProtocolTypeRouter, URLRouter
+# from channels.security.websocket import AllowedHostsOriginValidator
+# from apps.rides.middleware import JWTAuthMiddleware
+# from apps.rides.routing import websocket_urlpatterns
+#
+# application = ProtocolTypeRouter({
+#     'http': django_asgi_app,
+#     'websocket': AllowedHostsOriginValidator(
+#         JWTAuthMiddleware(URLRouter(websocket_urlpatterns))
+#     ),
+# })
 
-from rides.middleware import JWTAuthMiddleware
-from rides.routing import websocket_urlpatterns
-
-
-application = ProtocolTypeRouter({
-    "http": django_asgi_app,
-    "websocket": AllowedHostsOriginValidator(
-        JWTAuthMiddleware(
-            URLRouter(websocket_urlpatterns)
-        )
-    ),
-})
+# Şimdilik sadece HTTP:
+application = django_asgi_app

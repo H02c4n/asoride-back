@@ -3,6 +3,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/users/', include('users.urls')),
-    path('api/rides/', include('rides.urls')),
+    # Adım 3'te eklenecek:
+    # path('api/users/', include('apps.users.urls')),
+    # path('api/rides/', include('apps.rides.urls')),
+    # path('api/notifications/', include('apps.notifications.urls')),
 ]

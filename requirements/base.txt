@@ -1,0 +1,12 @@
+Django>=5.0
+djangorestframework
+psycopg2-binary
+djangorestframework-simplejwt
+django-cors-headers
+python-decouple
+daphne
+channels
+channels-redis
+kafka-python
+pywebpush
+whitenoise

@@ -13,21 +13,21 @@ ENV/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-/media/
-/staticfiles/
+media/
+staticfiles/
 
-# Environment variables and secrets
+# Environment variables
 .env
 .env.*
 !.env.example
 
 # Test and coverage artifacts
-.pytest_cache/
 .coverage
 htmlcov/
+.pytest_cache/
 
-# Editors and operating systems
-.vscode/
+# Editor and OS files
 .idea/
+.vscode/
 .DS_Store
 Thumbs.db

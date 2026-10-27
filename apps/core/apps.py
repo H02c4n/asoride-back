@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class RidesConfig(AppConfig):
+class CoreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'rides'
+    name = 'apps.core'
