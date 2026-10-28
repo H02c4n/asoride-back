@@ -53,7 +53,7 @@ def publish_ride_status_changed(ride, old_status: str, new_status: str) -> None:
 def notify_new_ride_to_nearby_drivers(ride) -> None:
     """Yeni ride talebi → çevredeki online sürücülere push (Adım 9'da aktif)."""
     try:
-        from notifications.services.push_service import push_new_ride_to_nearby_drivers
+        from apps.notifications.services.push_service import push_new_ride_to_nearby_drivers
         push_new_ride_to_nearby_drivers(ride)
     except ImportError:
         pass
@@ -64,7 +64,7 @@ def notify_new_ride_to_nearby_drivers(ride) -> None:
 def notify_ride_event_to_customer(ride, title: str, body: str, url: str, tag: str) -> None:
     """Müşteriye push (Adım 9'da aktif)."""
     try:
-        from notifications.services.push_service import send_push_to_user
+        from apps.notifications.services.push_service import send_push_to_user
         send_push_to_user(user=ride.customer, title=title, body=body, url=url, tag=tag)
     except ImportError:
         pass

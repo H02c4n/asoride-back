@@ -8,5 +8,7 @@ daphne
 channels
 channels-redis
 kafka-python
-pywebpush
+pywebpush==2.0.0
+py-vapid==1.9.4
+cryptography>=42.0
 whitenoise
