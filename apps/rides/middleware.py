@@ -1,8 +1,3 @@
-"""
-WebSocket bağlantısında JWT doğrulama.
-Token `?token=<jwt>` query parametresinden alınır (tarayıcı WS API
-özel header göndermeye izin vermez).
-"""
 from urllib.parse import parse_qs
 
 from channels.db import database_sync_to_async
@@ -17,8 +12,11 @@ def get_user_from_token(token: str):
         access = AccessToken(token)
         user_id = access['user_id']
         from apps.users.models import User
-        return User.objects.get(id=user_id)
-    except Exception:
+        user = User.objects.get(id=user_id)
+        print(f"[WS-MW] JWT OK: user={user.username} id={user.id}")
+        return user
+    except Exception as e:
+        print(f"[WS-MW] JWT HATA: {type(e).__name__}: {e}")
         return AnonymousUser()
 
 
@@ -29,8 +27,10 @@ class JWTAuthMiddleware(BaseMiddleware):
         token = params.get('token', [None])[0]
 
         if token:
+            print(f"[WS-MW] Token geldi (ilk 30): {token[:30]}...")
             scope['user'] = await get_user_from_token(token)
         else:
+            print("[WS-MW] Token YOK")
             scope['user'] = AnonymousUser()
 
         return await super().__call__(scope, receive, send)

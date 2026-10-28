@@ -112,7 +112,9 @@ REDIS_PORT = config('REDIS_PORT', default='6379', cast=int)
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {'hosts': [f'redis://{REDIS_HOST}:{REDIS_PORT}/0']},
+        'CONFIG': {
+            'hosts': [f'redis://{REDIS_HOST}:{REDIS_PORT}/0?socket_timeout=30'],
+        },
     },
 }
 

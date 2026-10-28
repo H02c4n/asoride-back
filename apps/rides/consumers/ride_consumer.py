@@ -20,19 +20,28 @@ class RideConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         user = self.scope['user']
+        print(f"[WS-CONS] connect çağrıldı | user={user} | is_anon={user.is_anonymous}")
+
         if user.is_anonymous:
+            print("[WS-CONS] Anonim → close(4001)")
             await self.close(code=4001)
             return
 
         self.ride_id = self.scope['url_route']['kwargs']['ride_id']
         self.group_name = f'ride_{self.ride_id}'
+        print(f"[WS-CONS] ride_id={self.ride_id} user_id={user.id} role={user.role}")
 
-        if not await self._user_has_ride_access(user):
+        has_access = await self._user_has_ride_access(user)
+        print(f"[WS-CONS] has_access={has_access}")
+
+        if not has_access:
+            print("[WS-CONS] Erişim YOK → close(4003)")
             await self.close(code=4003)
             return
 
         await self.channel_layer.group_add(self.group_name, self.channel_name)
         await self.accept()
+        print(f"[WS-CONS] ACCEPT: {user.username} → {self.group_name}")
 
         await self.send(text_data=json.dumps({
             'type': 'connected',
@@ -111,7 +120,9 @@ class RideConsumer(AsyncWebsocketConsumer):
         from ..selectors import get_ride_by_id
         ride = get_ride_by_id(self.ride_id)
         if not ride:
+            print(f"[WS-CONS] Ride {self.ride_id} BULUNAMADI")
             return False
+        print(f"[WS-CONS] Ride sahipleri: customer_id={ride.customer_id} driver_id={ride.driver_id}")
         return ride.customer_id == user.id or ride.driver_id == user.id
 
     @database_sync_to_async
