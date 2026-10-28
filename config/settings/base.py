@@ -118,10 +118,17 @@ CHANNEL_LAYERS = {
     },
 }
 
+# ------------------------------------------------------------------
 # Kafka
+# ------------------------------------------------------------------
 KAFKA_BOOTSTRAP_SERVERS = config('KAFKA_BOOTSTRAP_SERVERS', default='127.0.0.1:9092').split(',')
 KAFKA_TOPIC_RIDE_REQUESTED = 'ride.requested'
 KAFKA_TOPIC_RIDE_STATUS = 'ride.status_changed'
+
+# SASL (Aiven / bulut için; local'de boş)
+KAFKA_USERNAME = config('KAFKA_USERNAME', default='')
+KAFKA_PASSWORD = config('KAFKA_PASSWORD', default='')
+KAFKA_CA_CERT = config('KAFKA_CA_CERT', default='')
 
 # Push
 VAPID_PRIVATE_KEY = config('VAPID_PRIVATE_KEY', default='')

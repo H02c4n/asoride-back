@@ -1,6 +1,5 @@
 # Asoride v2 — Docker Compose
-# Ortak environment değişkenlerini YAML anchor ile tanımlıyoruz
-# (Kafka consumer'lar da aynı env'i kullanır, kopyala-yapıştır yok)
+# Tüm backend servisleri aynı env anchor'ı paylaşır.
 
 x-backend-env: &backend-env
   DJANGO_ENV: development
@@ -61,7 +60,7 @@ services:
       retries: 10
 
   # ==========================================================
-  # Kafka — KRaft modu (Zookeeper'sız)
+  # Kafka — KRaft modu
   # ==========================================================
   kafka:
     image: apache/kafka:3.7.0
@@ -90,7 +89,7 @@ services:
       retries: 10
 
   # ==========================================================
-  # Django + Daphne (ASGI — HTTP + WebSocket)
+  # Django + Daphne (HTTP + WebSocket)
   # ==========================================================
   backend:
     build: .
